@@ -7,11 +7,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ValidUserRequest {
+public class ValidUserResponse {
     // private String full_name;
     //  private String email;
     private String userName;
-    private String password;
-  //  private String UserId ;
+  //  private String password;
+    private String UserId ;
+
     //  private boolean generate_magic_link;
 }
