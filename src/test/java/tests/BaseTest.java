@@ -8,26 +8,40 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 public class BaseTest {
-    final static String BASE_URI = "https://demoqa.com/Account/v1";
+    final static String BASE_URI_USERS = "https://demoqa.com/Account/v1";
+    final static String BASE_URI_BOOKS = "https://demoqa.com/BookStore/v1";
 
     protected final static String endpoint = "/User";
     protected final static String endpointGetUser = "/User/{UUID}"; //https://demoqa.com/Account/v1/User/{UUID}
     protected final static String endpointAuthorized = "/Authorized";
     protected final static String endpointGenerateToken = "/GenerateToken";
 
+    protected final static String endpointBook = "/Book";
+    protected final static String endpointBooks = "/Books";
+    //protected final static String endpointBooksUserId= = "/Books?UserId=";
+    //https://demoqa.com/BookStore/v1/Books?UserId=025f6005-0560-4c00-b01c-998010c9b5b9
+    protected final static String endpointPutBooks = "/Books/{ISBN}";
+
     Faker faker = new Faker();
-    protected String fakerLogin = faker.name().username();
+    protected String fakerLogin = faker.internet().emailAddress().toLowerCase();
+    protected String fakerISBN = faker.numerify("isbn");
 
 
-    static RequestSpecification specification = new RequestSpecBuilder()
+    static RequestSpecification specificationUsers = new RequestSpecBuilder()
             .setUrlEncodingEnabled(false)
-            .setBaseUri(BASE_URI)
+            .setBaseUri(BASE_URI_USERS)
             .setContentType(ContentType.JSON)
             .build();
 
-    public Response postRequest(String endPoint, Integer responseCode, Object body) {
+    static RequestSpecification specificationBooks = new RequestSpecBuilder()
+            .setUrlEncodingEnabled(false)
+            .setBaseUri(BASE_URI_BOOKS)
+            .setContentType(ContentType.JSON)
+            .build();
+
+    public Response postRequestUsers(String endpoint, Integer responseCode, Object body) {
         Response response = RestAssured.given()
-                .spec(specification)
+                .spec(specificationUsers)
                 .body(body)
                 .when()
                 .log().all()
@@ -37,13 +51,13 @@ public class BaseTest {
         response.then().assertThat().statusCode(responseCode);
         return response;
     }
-    public Response postRequestForToken(String endPoint, Integer responseCode, Object body) {
+    public Response postRequestBooks(String endpointBooks, Integer responseCode, Object body) {
         Response response = RestAssured.given()
-                .spec(specification)
+                .spec(specificationBooks)
                 .body(body)
                 .when()
                 .log().all()
-                .post(endpoint)
+                .post(endpointBooks)
                 .then().log().all()
                 .extract().response();
         response.then().assertThat().statusCode(responseCode);
@@ -51,7 +65,7 @@ public class BaseTest {
     }
     public static Response getRequestWithToken(String endPoint, Integer responseCode,String token) {
         Response response = (Response) RestAssured.given()
-                .spec(specification)
+                .spec(specificationUsers)
                 .when()
                 .header("Authorization","Bearer "+token )
                 .log().all()
@@ -63,10 +77,10 @@ public class BaseTest {
         response.then().assertThat().statusCode(responseCode);
         return response;
     }
-   // public static Response getRequest(String endPoint, Integer responseCode, Object body) {
-    public static Response getRequest(String endPoint, Integer responseCode) {
+   // public static Response getRequestForUsers(String endPoint, Integer responseCode, Object body) {
+    public static Response getRequestForUsers(String endPoint, Integer responseCode) {
         Response response = (Response) RestAssured.given()
-                .spec(specification)
+                .spec(specificationUsers)
                 .when()
                 .log().all()
                 .get(endPoint)
@@ -78,9 +92,23 @@ public class BaseTest {
         return response;
     }
 
+    public static Response getRequestForBooks(String endpointBooks, Integer responseCode) {
+        Response response = (Response) RestAssured.given()
+                .spec(specificationBooks)
+                .when()
+                .log().all()
+                .get(endpointBooks)
+                .then().log().all()
+                .extract().response();
+        //    .jsonPath().getObject("", GetRequest.class);
+        //      .extract().body().jsonPath().getObject("data", UserDataResponse.class);
+        response.then().assertThat().statusCode(responseCode);
+        return response;
+    }
+
     public Response getRequestWithParam(String endPoint, Integer responseCode, String paramName, String value) {
         Response response = RestAssured.given()
-                .spec(specification)
+                .spec(specificationUsers)
                 .when()
                 .pathParam("UserId", value)
                 //  .pathParam(paramName, id)
@@ -95,7 +123,7 @@ public class BaseTest {
 
     public Response putRequest(String endPoint, Integer responseCode, Object body) {
         Response response = RestAssured.given()
-                .spec(specification)
+                .spec(specificationUsers)
                 .body(body)
                 .when()
                 .log().all()
@@ -106,10 +134,10 @@ public class BaseTest {
         return response;
     }
 
-    public Response deleteRequest(String endPoint, Integer responseCode, String value) {
+    public Response deleteRequestForUsers(String endpoint, Integer responseCode, String value) {
 
         Response response = RestAssured.given()
-                .spec(specification)
+                .spec(specificationUsers)
               //  .body(body)
                 .when()
                 .pathParam("UserId", value)
@@ -120,15 +148,49 @@ public class BaseTest {
         response.then().assertThat().statusCode(responseCode);
         return response;
     }
-// protected Response deleteRequest(String endPoint, int responseCode, String value) {
-//        Response response = RestAssured.given()
-//                .spec(spec)
-//                .when()
-//                .pathParam("UserId", value)
-//                .log().all()
-//                .delete(endPoint)
-//                .then().log().all()
-//                .extract().response();
-//        response.then().assertThat().statusCode(responseCode);
-//        return response;
+   // public Response deleteRequestForBooks(String endpointBooks, Integer responseCode, String value) {
+
+        public Response deleteRequestForBooks(String endpointBooks, Integer responseCode) {
+
+        Response response = RestAssured.given()
+                .spec(specificationBooks)
+                //  .body(body)
+                .when()
+            //    .pathParam("UserId", value)
+                .log().all()
+                .delete(endpointBooks)
+                .then().log().all()
+                .extract().response();
+        response.then().assertThat().statusCode(responseCode);
+        return response;
+    }
+
+    public Response deleteRequestWithParamForBooks(String endpointBooks, Integer responseCode, String paramName, String value) {
+        Response response = RestAssured.given()
+                .spec(specificationBooks)
+                .when()
+               // .request("?UserId="+value)
+                //.pathParam("UserId", value)
+                .pathParam(paramName, value)
+                .log().all()
+                .get(endpointBooks)
+                .then().log().all()
+                .extract().response();
+        response.then().assertThat().statusCode(responseCode);
+        return response;
+    }
+
+    public static Response getRequestForBook(String endpointBook, Integer responseCode) {
+        Response response = (Response) RestAssured.given()
+                .spec(specificationBooks)
+                .when()
+                .log().all()
+                .get(endpointBook)
+                .then().log().all()
+                .extract().response();
+        //    .jsonPath().getObject("", GetRequest.class);
+        //      .extract().body().jsonPath().getObject("data", UserDataResponse.class);
+        response.then().assertThat().statusCode(responseCode);
+        return response;
+    }
 }
