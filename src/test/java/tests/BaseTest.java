@@ -24,7 +24,7 @@ public class BaseTest {
 
     Faker faker = new Faker();
     protected String fakerLogin = faker.internet().emailAddress().toLowerCase();
-    protected String fakerISBN = faker.numerify("isbn");
+    protected String fakerISBN = faker.numerify("9781449325863");
 
 
     static RequestSpecification specificationUsers = new RequestSpecBuilder()
@@ -51,11 +51,15 @@ public class BaseTest {
         response.then().assertThat().statusCode(responseCode);
         return response;
     }
-    public Response postRequestBooks(String endpointBooks, Integer responseCode, Object body) {
+
+    public Response postRequestBooks(String endpointBooks, Integer responseCode, Object body, String token) {
         Response response = RestAssured.given()
                 .spec(specificationBooks)
                 .body(body)
                 .when()
+                .header("Authorization", "Bearer " + token)
+              //  .pathParam("UserId", userId)
+                //.and().pathParam( "isbn",fakerISBN)
                 .log().all()
                 .post(endpointBooks)
                 .then().log().all()
@@ -63,13 +67,15 @@ public class BaseTest {
         response.then().assertThat().statusCode(responseCode);
         return response;
     }
-    public static Response getRequestWithToken(String endPoint, Integer responseCode,String token) {
+
+    public static Response getRequestWithToken(String endpoint, Integer responseCode, String token, Object body) {
         Response response = (Response) RestAssured.given()
                 .spec(specificationUsers)
+                .body(body)
                 .when()
-                .header("Authorization","Bearer "+token )
+                .header("Authorization", "Bearer " + token)
                 .log().all()
-                .get(endPoint)
+                .get(endpoint)
                 .then().log().all()
                 .extract().response();
         //    .jsonPath().getObject("", GetRequest.class);
@@ -77,7 +83,8 @@ public class BaseTest {
         response.then().assertThat().statusCode(responseCode);
         return response;
     }
-   // public static Response getRequestForUsers(String endPoint, Integer responseCode, Object body) {
+
+    // public static Response getRequestForUsers(String endPoint, Integer responseCode, Object body) {
     public static Response getRequestForUsers(String endPoint, Integer responseCode) {
         Response response = (Response) RestAssured.given()
                 .spec(specificationUsers)
@@ -86,7 +93,7 @@ public class BaseTest {
                 .get(endPoint)
                 .then().log().all()
                 .extract().response();
-            //    .jsonPath().getObject("", GetRequest.class);
+        //    .jsonPath().getObject("", GetRequest.class);
         //      .extract().body().jsonPath().getObject("data", UserDataResponse.class);
         response.then().assertThat().statusCode(responseCode);
         return response;
@@ -134,29 +141,31 @@ public class BaseTest {
         return response;
     }
 
-    public Response deleteRequestForUsers(String endpoint, Integer responseCode, String value) {
+    //  public Response deleteRequestForUsers(String endpoint, Integer responseCode, Object body,String token, String paramName, String value) {
+    public Response deleteRequestForUsers(String endpoint, Integer responseCode, Object body, String token) {
 
         Response response = RestAssured.given()
                 .spec(specificationUsers)
-              //  .body(body)
+                .body(body)
                 .when()
-                .pathParam("UserId", value)
+                //  .pathParam("UserId", "userId")
+                .header("Authorization", "Bearer " + token)
                 .log().all()
-                .delete(endpointGetUser)
+                .delete(endpoint)
                 .then().log().all()
                 .extract().response();
         response.then().assertThat().statusCode(responseCode);
         return response;
     }
-   // public Response deleteRequestForBooks(String endpointBooks, Integer responseCode, String value) {
 
-        public Response deleteRequestForBooks(String endpointBooks, Integer responseCode) {
+    // public Response deleteRequestForBooks(String endpointBooks, Integer responseCode, String value) {
+    public Response deleteRequestForBooks(String endpointBooks, Integer responseCode) {
 
         Response response = RestAssured.given()
                 .spec(specificationBooks)
                 //  .body(body)
                 .when()
-            //    .pathParam("UserId", value)
+                //    .pathParam("UserId", value)
                 .log().all()
                 .delete(endpointBooks)
                 .then().log().all()
@@ -169,7 +178,7 @@ public class BaseTest {
         Response response = RestAssured.given()
                 .spec(specificationBooks)
                 .when()
-               // .request("?UserId="+value)
+                // .request("?UserId="+value)
                 //.pathParam("UserId", value)
                 .pathParam(paramName, value)
                 .log().all()

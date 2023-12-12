@@ -8,8 +8,14 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class ValidBooksRequest {
+
     private String userId ;
-    private String isbn ;
+
+    private String  [] collectionOfIsbns ;
+    private String isbn;
+
+
+    //private String isbn ;
     // private String full_name;
     //  private String email;
    // private String userName;

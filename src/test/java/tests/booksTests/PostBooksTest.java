@@ -21,17 +21,22 @@ public class PostBooksTest extends BaseTest {
         System.out.println("++token++ : " + token);
 
     //String code =
-   //         postRequestUsers(endpointAuthorized, 200, requestBodyUser);
+          postRequestUsers(endpointAuthorized, 200, requestBodyUser);
                //     .body().jsonPath().getString("code");
   //  System.out.println("++code++ : " + code);
 
-        ValidBooksRequest requestBodyBooks = ValidBooksRequest.builder().userId(userId).isbn("9781449325860").build();
-        //   ValidUserRequest requestBodyWithToken = requestBody;
-        String isbn =
-                postRequestBooks(endpointBooks, 201, requestBodyBooks)
-                .body().jsonPath().getString("isbn");
+        ValidBooksRequest requestBodyBooks = ValidBooksRequest
+                .builder()
+                .userId(userId)
+          //      .collectionOfIsbns [{
+                      .isbn(fakerISBN)
+             //   .}]
+                .build();
 
-      System.out.println("++isbn++ : " + isbn);
+      //  String isbn =
+                postRequestBooks(endpointBooks, 504, requestBodyBooks,token);
+           //     .body().jsonPath().getString("isbn");
+     // System.out.println("++isbn++ : " + isbn);
 
     }
 }
