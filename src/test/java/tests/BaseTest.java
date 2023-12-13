@@ -25,7 +25,7 @@ public class BaseTest {
     Faker faker = new Faker();
     protected String fakerLogin = faker.internet().emailAddress().toLowerCase();
     protected String fakerISBN = faker.numerify("9781449325863");
-
+    protected String[] books ;
 
     static RequestSpecification specificationUsers = new RequestSpecBuilder()
             .setUrlEncodingEnabled(false)
@@ -78,7 +78,7 @@ public class BaseTest {
                 .get(endpoint)
                 .then().log().all()
                 .extract().response();
-        //    .jsonPath().getObject("", GetRequest.class);
+        //    .jsonPath().getObject("", GetRequestBook.class);
         //      .extract().body().jsonPath().getObject("data", UserDataResponse.class);
         response.then().assertThat().statusCode(responseCode);
         return response;
@@ -93,21 +93,23 @@ public class BaseTest {
                 .get(endPoint)
                 .then().log().all()
                 .extract().response();
-        //    .jsonPath().getObject("", GetRequest.class);
+        //    .jsonPath().getObject("", GetRequestBook.class);
         //      .extract().body().jsonPath().getObject("data", UserDataResponse.class);
         response.then().assertThat().statusCode(responseCode);
         return response;
     }
 
-    public static Response getRequestForBooks(String endpointBooks, Integer responseCode) {
+    public static Response getRequestForBooks(String endpointBooks, Integer responseCode, String token, Object body) {
         Response response = (Response) RestAssured.given()
                 .spec(specificationBooks)
+                .body(body)
                 .when()
+                .header("Authorization", "Bearer " + token)
                 .log().all()
                 .get(endpointBooks)
                 .then().log().all()
                 .extract().response();
-        //    .jsonPath().getObject("", GetRequest.class);
+        //    .jsonPath().getObject("", GetRequestBook.class);
         //      .extract().body().jsonPath().getObject("data", UserDataResponse.class);
         response.then().assertThat().statusCode(responseCode);
         return response;
@@ -126,7 +128,6 @@ public class BaseTest {
         response.then().assertThat().statusCode(responseCode);
         return response;
     }
-
 
     public Response putRequest(String endPoint, Integer responseCode, Object body) {
         Response response = RestAssured.given()
@@ -159,12 +160,12 @@ public class BaseTest {
     }
 
     // public Response deleteRequestForBooks(String endpointBooks, Integer responseCode, String value) {
-    public Response deleteRequestForBooks(String endpointBooks, Integer responseCode) {
-
+    public Response deleteRequestForBooks(String endpointBooks, Integer responseCode, Object body, String token) {
         Response response = RestAssured.given()
                 .spec(specificationBooks)
-                //  .body(body)
+                .body(body)
                 .when()
+                .header("Authorization", "Bearer " + token)
                 //    .pathParam("UserId", value)
                 .log().all()
                 .delete(endpointBooks)
@@ -180,9 +181,9 @@ public class BaseTest {
                 .when()
                 // .request("?UserId="+value)
                 //.pathParam("UserId", value)
-                .pathParam(paramName, value)
+               // .pathParam(paramName, value)
                 .log().all()
-                .get(endpointBooks)
+                .delete(endpointBooks)
                 .then().log().all()
                 .extract().response();
         response.then().assertThat().statusCode(responseCode);
@@ -197,8 +198,37 @@ public class BaseTest {
                 .get(endpointBook)
                 .then().log().all()
                 .extract().response();
-        //    .jsonPath().getObject("", GetRequest.class);
+        //    .jsonPath().getObject("", GetRequestBook.class);
         //      .extract().body().jsonPath().getObject("data", UserDataResponse.class);
+        response.then().assertThat().statusCode(responseCode);
+        return response;
+    }
+
+    public static Response getRequestForBook(String endpointBook, Integer responseCode, Object body) {
+        Response response = (Response) RestAssured.given()
+                .spec(specificationBooks)
+                .body(body)
+                .when()
+                .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IktpcmEuUGFjb2NoYTdAeWFob28uY29tIiwicGFzc3dvcmQiOiJRcTEyMzQhISEiLCJpYXQiOjE3MDI0MDk2NDF9.sOA-Ha1cv4EBK3zGWirewYr2AQsNL8y52t_QhDi_mSQ " )
+                .param("isbn","9781449325862")
+                .log().all()
+                .get(endpointBook)
+                .then().log().all()
+                .extract().response();
+        response.then().assertThat().statusCode(responseCode);
+        return response;
+    }
+    public static Response deleteRequestForBook(String endpointBook, Integer responseCode, Object body) {
+        Response response = (Response) RestAssured.given()
+                .spec(specificationBooks)
+                .body(body)
+                .when()
+                .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IktpcmEuUGFjb2NoYTdAeWFob28uY29tIiwicGFzc3dvcmQiOiJRcTEyMzQhISEiLCJpYXQiOjE3MDI0MDk2NDF9.sOA-Ha1cv4EBK3zGWirewYr2AQsNL8y52t_QhDi_mSQ " )
+                .param("isbn","9781449325862")
+                .log().all()
+                .delete(endpointBook)
+                .then().log().all()
+                .extract().response();
         response.then().assertThat().statusCode(responseCode);
         return response;
     }

@@ -1,6 +1,6 @@
 package tests.usersTests;
 
-import dto.GetRequest;
+import dto.GetRequestBook;
 import dto.ValidUserRequest;
 import org.junit.jupiter.api.Test;
 import tests.BaseTest;
@@ -23,9 +23,9 @@ public class GetUserTest extends BaseTest {
 
         postRequestUsers(endpointAuthorized, 200, requestBody);
 
-        GetRequest getRequest = GetRequest.builder().UserId(userId).build();
+        GetRequestBook getRequestBook = GetRequestBook.builder().userId(userId).build();
         //getRequestWithToken(endpointGetUser, 401,token);
-     getRequestWithToken(endpoint+"/"+userId, 200,token,getRequest);
+     getRequestWithToken(endpoint+"/"+userId, 200,token, getRequestBook);
        // getRequestWithToken(endpoint+"?User="+userId, 200,token);
 
     }

@@ -7,11 +7,14 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GetRequest {
-    private String UserId ;
+public class GetRequestBook {
+   // private String UserId ;
+    private String isbn ;
+    private String userId ;
+
     // private String full_name;
     //  private String email;
-  //  private String userName;
-    //private String password;
+   private String userName;
+    private String password;
     //  private boolean generate_magic_link;
 }

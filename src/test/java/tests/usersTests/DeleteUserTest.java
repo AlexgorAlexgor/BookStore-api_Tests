@@ -25,7 +25,7 @@ public class DeleteUserTest extends BaseTest {
          postRequestUsers(endpointAuthorized, 200, requestBody);
 
 
-     DeleteRequest deleteRequest = DeleteRequest.builder().UserId(userId).build();
+     DeleteRequest deleteRequest = DeleteRequest.builder().userId(userId).build();
 
      //   Response response = deleteRequestForUsers(endpoint+"/"+userId ,200,userId);
       //   Response response = deleteRequestForUsers(endpoint+"/"+userId,200,deleteRequest,token,"UserId",userId);

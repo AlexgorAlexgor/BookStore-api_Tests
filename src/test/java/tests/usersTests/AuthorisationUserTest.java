@@ -8,7 +8,11 @@ public class AuthorisationUserTest extends BaseTest {
     @Test
     public void authorisationUserTest(){
 
-        ValidUserRequest requestBody = ValidUserRequest.builder().userName(fakerLogin).password("Qq1234!!").build();
+        ValidUserRequest requestBody = ValidUserRequest
+                .builder()
+                .userName(fakerLogin)
+                .password("Qq1234!!")
+                .build();
         //   ValidUserRequest requestBodyWithToken = requestBody;
         String userId = postRequestUsers(endpoint, 201, requestBody)
                 .body().jsonPath().getString("userID");

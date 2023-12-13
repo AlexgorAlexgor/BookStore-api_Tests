@@ -8,10 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class DeleteRequest {
-    private String UserId ;
-    // private String full_name;
-    //  private String email;
-  //  private String userName;
-    //private String password;
-    //  private boolean generate_magic_link;
+    private String userId ;
+    private String isbn ;
+    private String userName;
+    private String password;
 }
