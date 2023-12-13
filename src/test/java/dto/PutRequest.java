@@ -7,9 +7,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DeleteRequest {
-    private String isbn ;
+public class PutRequest {
+
     private String userId ;
+    private String isbn ;
   //  private String userName;
  //   private String password;
 }

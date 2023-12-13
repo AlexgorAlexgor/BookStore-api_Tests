@@ -20,7 +20,7 @@ public class BaseTest {
     protected final static String endpointBooks = "/Books";
     //protected final static String endpointBooksUserId= = "/Books?UserId=";
     //https://demoqa.com/BookStore/v1/Books?UserId=025f6005-0560-4c00-b01c-998010c9b5b9
-    protected final static String endpointPutBooks = "/Books/{ISBN}";
+    protected final static String endpointPutBooks = "/Books/9781449325862";
 
     Faker faker = new Faker();
     protected String fakerLogin = faker.internet().emailAddress().toLowerCase();
@@ -218,15 +218,32 @@ public class BaseTest {
         response.then().assertThat().statusCode(responseCode);
         return response;
     }
-    public static Response deleteRequestForBook(String endpointBook, Integer responseCode, Object body) {
+
+    public static Response deleteRequestForBook(String endpointBook, Integer responseCode, Object body,String token) {
         Response response = (Response) RestAssured.given()
                 .spec(specificationBooks)
                 .body(body)
                 .when()
-                .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IktpcmEuUGFjb2NoYTdAeWFob28uY29tIiwicGFzc3dvcmQiOiJRcTEyMzQhISEiLCJpYXQiOjE3MDI0MDk2NDF9.sOA-Ha1cv4EBK3zGWirewYr2AQsNL8y52t_QhDi_mSQ " )
+                .header("Authorization",token)
                 .param("isbn","9781449325862")
                 .log().all()
                 .delete(endpointBook)
+                .then().log().all()
+                .extract().response();
+        response.then().assertThat().statusCode(responseCode);
+        return response;
+    }
+
+    public static Response putRequestForBook(String endpointBook, Integer responseCode, Object body,String token) {
+        Response response = (Response) RestAssured.given()
+                .spec(specificationBooks)
+                .body(body)
+                .when()
+                .header("Authorization",token)
+                //.basePath("9781449325864")
+               // .param("9781449325864")
+                .log().all()
+                .put(endpointPutBooks)
                 .then().log().all()
                 .extract().response();
         response.then().assertThat().statusCode(responseCode);
