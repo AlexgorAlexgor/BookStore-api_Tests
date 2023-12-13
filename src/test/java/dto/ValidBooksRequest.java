@@ -11,7 +11,7 @@ public class ValidBooksRequest {
 
     private String userId ;
 
-    private String  [] collectionOfIsbns ;
+   // private String  [] collectionOfIsbns ;
     private String isbn;
 
 

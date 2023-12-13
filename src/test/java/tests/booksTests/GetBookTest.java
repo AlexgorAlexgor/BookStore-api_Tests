@@ -23,10 +23,7 @@ public class GetBookTest extends BaseTest {
                   //      .userId(userId)
                       .isbn("9781449325860")
                          .build();
-  // getRequestForBook(endpointBook, 200);
-   // getRequestForBook(endpointBook, 504);
-//https://demoqa.com/BookStore/v1/Book?ISBN=9781449325860
-    //getRequestForBook(endpointBook+"?ISBN=9781449325860", 504);
+
    getRequestForBook(endpointBook+"?ISBN=9781449325860", 400);
 
     }

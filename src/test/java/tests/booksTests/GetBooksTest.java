@@ -26,12 +26,5 @@ public class GetBooksTest extends BaseTest {
        // String books =
        //         postRequestBooks(endpointBooks, 200, requestBodyBooks)
     getRequestForBooks(endpointBooks, 200);
-
-           /* .body().jsonPath()
-                                .getObject("", GetRequestBooks.class)
-                                 .toString();*/
-                //                .extract().body().jsonPath().getObject("", ErrorRegisterResponse.class);
-
-
     }
 }
